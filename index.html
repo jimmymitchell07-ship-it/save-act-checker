@@ -197,4 +197,77 @@
         } else {
             nameSection.style.display = "none";
             document.getElementById("nameMatch").value = "yes";
-            toggle
+            toggleNameProof();
+        }
+    }
+
+    function toggleNameProof() {
+        var match = document.getElementById("nameMatch").value;
+        var proofSection = document.getElementById("nameProofSection");
+        if (match === "no") {
+            proofSection.style.display = "block";
+        } else {
+            proofSection.style.display = "none";
+            document.getElementById("nameProof").value = "no";
+        }
+    }
+
+    function checkEligibility() {
+        var q1 = document.getElementById("passport").value;
+        var q2 = document.getElementById("realId").value;
+        var q3 = document.getElementById("idBirthplace").value;
+        var q4 = document.getElementById("military").value;
+
+        var hasPrimary = (q1 === "yes" || q2 === "yes" || q3 === "yes" || q4 === "yes");
+
+        var standardId = document.getElementById("standardId").value;
+        var secondaryDoc = document.getElementById("secondaryDoc").value;
+        var nameMatch = document.getElementById("nameMatch").value;
+        var nameProof = document.getElementById("nameProof").value;
+
+        var validSecondaryCombo = false;
+        if (standardId === "yes" && secondaryDoc === "hasDoc") {
+            if (nameMatch === "yes") {
+                validSecondaryCombo = true;
+            } else if (nameMatch === "no" && nameProof === "yes") {
+                validSecondaryCombo = true;
+            }
+        }
+
+        var resultBox = document.getElementById("result-box");
+        resultBox.style.display = "block";
+        resultBox.innerHTML = ""; 
+
+        if (hasPrimary || validSecondaryCombo) {
+            resultBox.className = "yes-result";
+            resultBox.innerHTML = "✅ YES. Based on your answers, you have the necessary documentation to vote under the SAVE Act.";
+        } else {
+            resultBox.className = "no-result";
+            var instructions = `
+                <div style="margin-bottom: 15px;">❌ NO. Based on your answers, you do not currently have the required documentation to register or vote under the SAVE Act.</div>
+                <hr>
+                <div class="directions">
+                    <strong>How to become eligible & Estimated Timeframes:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li style="margin-bottom: 15px;"><strong>Option 1: Obtain a U.S. Passport.</strong> Apply through the U.S. State Department. You need to bring your birth certificate, a photo ID, and a passport photo to an acceptance facility (like a post office) and pay the fee.
+                        <span class="timeframe">⏱️ <strong>Wait Time:</strong> 6 to 8 weeks for standard processing (or 2 to 3 weeks if you pay extra for expedited processing).</span></li>
+                        
+                        <li style="margin-bottom: 15px;"><strong>Option 2: Obtain your Birth Certificate.</strong> Request a certified copy from the Vital Records office in the state or county where you were born.
+                        <span class="timeframe">⏱️ <strong>Wait Time:</strong> Same-day if you walk into your local county office, but 4 to 8 weeks if ordering by mail or online.</span></li>
+                        
+                        <li style="margin-bottom: 15px;"><strong>For Name Changes:</strong> If your current name doesn't match your birth certificate (e.g., marriage), request a certified copy of your marriage license or court order from the county clerk where the event took place.
+                        <span class="timeframe">⏱️ <strong>Wait Time:</strong> Usually a few days to a few weeks, depending on the county.</span></li>
+                        
+                        <li style="margin-bottom: 15px;"><strong>For Naturalized Citizens:</strong> If you lost your Naturalization Certificate, you must file Form N-565 with U.S. Citizenship and Immigration Services (USCIS) to get a replacement.
+                        <span class="timeframe">⏱️ <strong>Wait Time:</strong> 7 to 10 months on average based on current USCIS workloads.</span></li>
+                    </ul>
+                    <em>Note: Once you obtain these physical documents, the SAVE Act requires you to present them in person to your local election official to register or update your voter registration.</em>
+                </div>
+            `;
+            resultBox.innerHTML = instructions;
+        }
+    }
+</script>
+
+</body>
+</html>
