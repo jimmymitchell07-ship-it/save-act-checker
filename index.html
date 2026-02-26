@@ -132,3 +132,69 @@
                 <option value="no">No</option>
                 <option value="yes">Yes</option>
             </select>
+        </div>
+
+        <div class="form-group">
+            <label>4. Do you have an official U.S. military ID AND your military service record showing you were born in the U.S.?</label>
+            <select id="military">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <h2 class="section-title">Category B: Secondary Documents</h2>
+        <p><i>If you answered "No" to all of the above, you must have a standard government photo ID <b>PLUS</b> one of the citizenship documents below.</i></p>
+
+        <div class="form-group">
+            <label>5. Do you have a standard valid government-issued photo ID (like a standard driver's license, state ID, or tribal ID)?</label>
+            <select id="standardId">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>6. Do you have at least ONE of the following official citizenship documents?</label>
+            <select id="secondaryDoc" onchange="toggleNameChange()">
+                <option value="none">No, I do not have any of these</option>
+                <option value="hasDoc">Yes, a Certified U.S. Birth Certificate</option>
+                <option value="hasDoc">Yes, an Extract from a U.S. hospital Record of Birth</option>
+                <option value="hasDoc">Yes, a Final adoption decree showing U.S. birth</option>
+                <option value="hasDoc">Yes, a Consular Report of Birth Abroad</option>
+                <option value="hasDoc">Yes, a Naturalization Certificate or Certificate of Citizenship</option>
+                <option value="hasDoc">Yes, an American Indian Card (KIC classification)</option>
+            </select>
+        </div>
+
+        <div class="sub-question" id="nameChangeSection">
+            <label>Does your current legal name match the name on that citizenship document? (e.g., if you changed your name due to marriage)</label>
+            <select id="nameMatch" onchange="toggleNameProof()">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+            
+            <div class="sub-question" id="nameProofSection" style="margin-top: 15px; border-left-color: #f39c12;">
+                <label>Do you have official documentation of the name change (like a certified marriage certificate or court order)?</label>
+                <select id="nameProof">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="button" onclick="checkEligibility()">Am I Eligible to Vote?</button>
+    </form>
+
+    <div id="result-box"></div>
+</div>
+
+<script>
+    function toggleNameChange() {
+        var doc = document.getElementById("secondaryDoc").value;
+        var nameSection = document.getElementById("nameChangeSection");
+        if (doc === "hasDoc") {
+            nameSection.style.display = "block";
+        } else {
+            nameSection.style.display = "none";
+            document.getElementById("nameMatch").value = "yes";
+            toggle
