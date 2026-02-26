@@ -50,7 +50,7 @@
             margin-left: 20px;
             padding-left: 15px;
             border-left: 3px solid #e74c3c;
-            display: none; /* Hidden by default */
+            display: none;
         }
         button {
             display: block;
@@ -92,6 +92,12 @@
             font-size: 16px;
             font-weight: normal;
         }
+        .timeframe {
+            display: block;
+            margin-top: 5px;
+            color: #e67e22;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -126,137 +132,3 @@
                 <option value="no">No</option>
                 <option value="yes">Yes</option>
             </select>
-        </div>
-
-        <div class="form-group">
-            <label>4. Do you have an official U.S. military ID AND your military service record showing you were born in the U.S.?</label>
-            <select id="military">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <h2 class="section-title">Category B: Secondary Documents</h2>
-        <p><i>If you answered "No" to all of the above, you must have a standard government photo ID <b>PLUS</b> one of the citizenship documents below.</i></p>
-
-        <div class="form-group">
-            <label>5. Do you have a standard valid government-issued photo ID (like a standard driver's license, state ID, or tribal ID)?</label>
-            <select id="standardId">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>6. Do you have at least ONE of the following official citizenship documents?</label>
-            <select id="secondaryDoc" onchange="toggleNameChange()">
-                <option value="none">No, I do not have any of these</option>
-                <option value="hasDoc">Yes, a Certified U.S. Birth Certificate</option>
-                <option value="hasDoc">Yes, an Extract from a U.S. hospital Record of Birth</option>
-                <option value="hasDoc">Yes, a Final adoption decree showing U.S. birth</option>
-                <option value="hasDoc">Yes, a Consular Report of Birth Abroad</option>
-                <option value="hasDoc">Yes, a Naturalization Certificate or Certificate of Citizenship</option>
-                <option value="hasDoc">Yes, an American Indian Card (KIC classification)</option>
-            </select>
-        </div>
-
-        <div class="sub-question" id="nameChangeSection">
-            <label>Does your current legal name match the name on that citizenship document? (e.g., if you changed your name due to marriage)</label>
-            <select id="nameMatch" onchange="toggleNameProof()">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
-            
-            <div class="sub-question" id="nameProofSection" style="margin-top: 15px; border-left-color: #f39c12;">
-                <label>Do you have official documentation of the name change (like a certified marriage certificate or court order)?</label>
-                <select id="nameProof">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                </select>
-            </div>
-        </div>
-
-        <button type="button" onclick="checkEligibility()">Am I Eligible to Vote?</button>
-    </form>
-
-    <div id="result-box"></div>
-</div>
-
-<script>
-    function toggleNameChange() {
-        var doc = document.getElementById("secondaryDoc").value;
-        var nameSection = document.getElementById("nameChangeSection");
-        if (doc === "hasDoc") {
-            nameSection.style.display = "block";
-        } else {
-            nameSection.style.display = "none";
-            document.getElementById("nameMatch").value = "yes";
-            toggleNameProof(); // Reset sub-menu
-        }
-    }
-
-    function toggleNameProof() {
-        var match = document.getElementById("nameMatch").value;
-        var proofSection = document.getElementById("nameProofSection");
-        if (match === "no") {
-            proofSection.style.display = "block";
-        } else {
-            proofSection.style.display = "none";
-            document.getElementById("nameProof").value = "no";
-        }
-    }
-
-    function checkEligibility() {
-        // Primary Docs
-        var q1 = document.getElementById("passport").value;
-        var q2 = document.getElementById("realId").value;
-        var q3 = document.getElementById("idBirthplace").value;
-        var q4 = document.getElementById("military").value;
-
-        var hasPrimary = (q1 === "yes" || q2 === "yes" || q3 === "yes" || q4 === "yes");
-
-        // Secondary Docs
-        var standardId = document.getElementById("standardId").value;
-        var secondaryDoc = document.getElementById("secondaryDoc").value;
-        var nameMatch = document.getElementById("nameMatch").value;
-        var nameProof = document.getElementById("nameProof").value;
-
-        var validSecondaryCombo = false;
-        if (standardId === "yes" && secondaryDoc === "hasDoc") {
-            if (nameMatch === "yes") {
-                validSecondaryCombo = true;
-            } else if (nameMatch === "no" && nameProof === "yes") {
-                validSecondaryCombo = true;
-            }
-        }
-
-        var resultBox = document.getElementById("result-box");
-        resultBox.style.display = "block";
-        resultBox.innerHTML = ""; // clear previous
-
-        if (hasPrimary || validSecondaryCombo) {
-            resultBox.className = "yes-result";
-            resultBox.innerHTML = "✅ YES. Based on your answers, you have the necessary documentation to vote under the SAVE Act.";
-        } else {
-            resultBox.className = "no-result";
-            var instructions = `
-                <div style="margin-bottom: 15px;">❌ NO. Based on your answers, you do not currently have the required documentation to register or vote under the SAVE Act.</div>
-                <hr>
-                <div class="directions">
-                    <strong>How to become eligible:</strong>
-                    <ul>
-                        <li><strong>Option 1 (Easiest if you travel): Obtain a U.S. Passport.</strong> You will need to apply through the U.S. State Department. This requires bringing your birth certificate, a photo ID, and a passport photo to an acceptance facility (like a post office) and paying the application fee.</li>
-                        <li><strong>Option 2 (Secondary Route): Obtain your Birth Certificate.</strong> If you don't have a passport, you will need a standard photo ID (like a driver's license) <em>and</em> a certified copy of your birth certificate. You can request a certified copy from the Vital Records office in the state or county where you were born.</li>
-                        <li><strong>For Name Changes:</strong> If your current name does not match your birth certificate (e.g., due to marriage), you must also request a certified copy of your marriage license or court order from the county clerk where the event took place.</li>
-                        <li><strong>For Naturalized Citizens:</strong> If you lost your Naturalization Certificate, you must file Form N-565 with U.S. Citizenship and Immigration Services (USCIS) to get a replacement.</li>
-                    </ul>
-                    <em>Note: Once you obtain these physical documents, the SAVE Act requires you to present them in person to your local election official to register or update your voter registration.</em>
-                </div>
-            `;
-            resultBox.innerHTML = instructions;
-        }
-    }
-</script>
-
-</body>
-</html>
